@@ -2,4 +2,4 @@
 ---------------
  
 #### built by jaewon Yoon 
-#### react.js, typescript, mobx, webpack, styled-components.
+#### react.js, typescript, redux, redux-observable, webpack, styled-components.
