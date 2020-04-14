@@ -1,0 +1,14 @@
+{
+	"presets": ["@babel/preset-react"],
+	"plugins": [
+		["@babel/plugin-proposal-decorators", {
+			"legacy" : true
+			}
+		],
+		[	"babel-plugin-styled-components", {
+			"displayName": true,
+			"preprocess": true
+			}
+		] 
+	]
+}
