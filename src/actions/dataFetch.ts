@@ -1,33 +1,49 @@
 import {
-	ViewModel
+	ViewModel,
+	NationalData
 } from 'models';
-export interface ActionType {
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { fetchRequest } from 'apis';
+export interface ActionInterface {
 	type: "FETCH_DATA" | "FETCH_DATA_FULFILLED" | "FETCH_DATA_CANCELLED" | "FETCH_DATA_REJECTED",
 	payload?: ViewModel | string 
 }
+
+// Actions
 export const FETCH_DATA = "FETCH_DATA";
 export const FETCH_DATA_FULFILLED = "FETCH_DATA_FULFILLED"; 
 export const FETCH_DATA_CANCELLED = "FETCH_DATA_CANCELLED";
 export const FETCH_DATA_REJECTED = "FETCH_DATA_REJECTED"; 
 
-export type FETCH_TYPE = {
-	type: "FETCH_DATA" |  "FETCH_DATA_FULFILLED" | "FETCH_DATA_CANCELLED" | "FETCH_DATA_REJECTED" ; 
-};
-
-export const cancelFetch: () => FETCH_TYPE = ()  => ({
+export const cancelFetch: () => ActionInterface = ()  => ({
 	type: FETCH_DATA_CANCELLED
  });  
 
-export const fetchData: () =>  FETCH_TYPE = () => ({
-	type: FETCH_DATA
+export const fetchData: () =>  ActionInterface = ( payload = [] as ViewModel) => ({
+	type: FETCH_DATA,
+	payload : [] 
 });
 
-export const fetchFulfilled: (payload: ViewModel) => FETCH_TYPE = (payload) => ({
+export const fetchDataAync = ()=> {
+	async (dispatch: ThunkDispatch<{},{},AnyAction>) => {
+		try{
+			dispatch(fetchData()); 
+			const [ , payload ] = await fetchRequest();
+			payload && dispatch(fetchFulfilled(payload)); 
+		}catch (error) {
+			dispatch(fetchRejected(error)); 
+			console.error(error); 
+		}
+	}
+}
+
+export const fetchFulfilled: (payload: ViewModel) => ActionInterface = (payload) => ({
 	type: FETCH_DATA_FULFILLED,
 	payload 
 });
 
-export const fetchRejected: ( payload: string) => FETCH_TYPE = ( payload ) => ({
+export const fetchRejected: ( payload: string) => ActionInterface = ( payload ) => ({
 	type: FETCH_DATA_REJECTED,
 	payload
 });

@@ -1,5 +1,5 @@
 import {
-	ActionType,
+	ActionInterface,
 	FETCH_DATA,
 	FETCH_DATA_CANCELLED,
 	FETCH_DATA_FULFILLED,
@@ -19,7 +19,7 @@ export const dataFetchReducer = (
 		error: "",
 		isFetchingData: false 
 	}, 
-	action: ActionType
+	action: ActionInterface
 ) => {
 	switch (action.type){
 		case FETCH_DATA : 
