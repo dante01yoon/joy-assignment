@@ -7,7 +7,7 @@ import { AnyAction } from 'redux';
 import { fetchRequest } from 'apis';
 export interface ActionInterface {
 	type: "FETCH_DATA" | "FETCH_DATA_FULFILLED" | "FETCH_DATA_CANCELLED" | "FETCH_DATA_REJECTED",
-	payload?: ViewModel | string 
+	payload?: ViewModel | string | undefined
 }
 
 // Actions
@@ -26,9 +26,9 @@ export const fetchData: () =>  ActionInterface = ( payload = [] as ViewModel) =>
 });
 
 export const fetchDataAync = ()=> {
-	async (dispatch: ThunkDispatch<{},{},AnyAction>) => {
+	return async (dispatch: ThunkDispatch<{},{},AnyAction>) => {
 		try{
-			dispatch(fetchData()); 
+			dispatch(fetchData()); 		
 			const [ , payload ] = await fetchRequest();
 			payload && dispatch(fetchFulfilled(payload)); 
 		}catch (error) {

@@ -3,11 +3,9 @@ import { applyMiddleware, createStore} from "redux";
 import { Provider } from 'react-redux'; 
 import { rootReducer } from 'reducers'; 
 import thunk from 'redux-thunk'; 
-import logger from 'redux-logger';
-const store = createStore(rootReducer, applyMiddleware(
-		thunk,
-		logger
-	)
+import { composeWithDevTools } from 'redux-devtools-extension';
+const store = createStore(rootReducer, 
+	composeWithDevTools(applyMiddleware(thunk))
 );
 
 export const JoyReduxProvider: FC<{

@@ -1,22 +1,30 @@
 import React, { FC, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'; 
 import {
-	ListContainer,
-	StyledColumn,
+	ListContainer
 } from './style';
 import { LoadingView } from 'components/loading';
-export const ListView = () => {
+import { fetchDataAync } from 'actions';
+import { RootState } from 'reducers';
+import { NationalData } from 'models'; 
+import { Card } from 'components/card';
+const ListView:FC = () => {
+	const dispatch = useDispatch(); 
+	const fetchData = useSelector((state: RootState) => state.data);
+	const listData =  fetchData?.data ?? [] as NationalData[]; 
 
 	useEffect(() => {
-		
-	})
-	const listData = []; 
+		dispatch(fetchDataAync());
+	},[]); 
 	return(
 	<>
 		<ListContainer>
 			{
-				listData.length > 0 
+				listData && listData?.length > 0 
 					?
-					<div>data</div>
+					listData.map((value,index) => {
+						return <Card key={index} index={index} search={true} nationalData={value}/>
+					})
 					:
 					<LoadingView />
 			}
@@ -28,3 +36,5 @@ export const ListView = () => {
 	)
 }
 
+
+export default ListView;

@@ -1,7 +1,7 @@
 export type NationalData = {
 	name: string,
 	alpha2Code : string,
-	callingCode : number[],
+	callingCodes : number[],
 	capital: string,
 	region: string
 }

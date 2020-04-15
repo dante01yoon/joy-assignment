@@ -6,12 +6,15 @@ import { JoyReduxProvider } from 'store';
 
 export const App:FC = () => {
 	return (
-		<JoyThemeProvider>
-			<JoyReduxProvider>
+		<JoyReduxProvider>
+			<JoyThemeProvider>
 				<JoyView />
-			</JoyReduxProvider>
-		</JoyThemeProvider>
+			</JoyThemeProvider>
+		</JoyReduxProvider>
 	)
 }
 
-ReactDOM.render(<App/>, document.getElementById('app')); 
+ReactDOM.render(
+		<App/>,
+	document.getElementById('app')
+); 

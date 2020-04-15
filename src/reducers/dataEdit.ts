@@ -37,6 +37,6 @@ export const dataEditReducer  = (
 		case EDIT_DATA_REJECTED:
 			return { ...state, isEditingData: false, error: action.payload}; 
 		default: 
-			return { ...state };
+			return state;
 	}
 }

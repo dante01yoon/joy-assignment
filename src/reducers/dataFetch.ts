@@ -8,18 +8,18 @@ import {
 import {
 	ViewModel
 } from 'models';
-export type State = {
+export type ModelState = {
 	data?: ViewModel,
 	error?: string, 
 	isFetchingData?: boolean
 }
 export const dataFetchReducer = (
-	state: State = {
+	state: ModelState = {
 		data: [],
 		error: "",
 		isFetchingData: false 
 	}, 
-	action: ActionInterface
+	action: ActionInterface 
 ) => {
 	switch (action.type){
 		case FETCH_DATA : 
@@ -31,7 +31,7 @@ export const dataFetchReducer = (
 		case FETCH_DATA_REJECTED:
 			return {...state, isFetchingData: false, error: action.payload};
 		default:
-			return {...state};
+			return state;
 	}
 }
 

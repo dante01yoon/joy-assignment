@@ -6,8 +6,4 @@ export const ListContainer = styled(StyledColumn)`
 	width: 646px;
 	height: auto;
 	margin-top: 3px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	box-shadow: 2px 0 0 ${p=> p.theme.colors.border};
 `;

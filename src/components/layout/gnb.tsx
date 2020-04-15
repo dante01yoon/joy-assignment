@@ -11,14 +11,14 @@ export const Gnb: FC<{
 	return(
 		<>
 			<StyledGnbLeft>
-				<TitleLeft>
+				<TitleRight>
 						국가 리스트 
-				</TitleLeft> 
+				</TitleRight> 
 			</StyledGnbLeft>
 			<StyledGnbRight>
-				<TitleRight>
+				<TitleLeft>
 						국가 검색/추가
-				</TitleRight>
+				</TitleLeft>
 			</StyledGnbRight>
 		</>
 	)	

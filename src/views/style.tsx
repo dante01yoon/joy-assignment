@@ -29,18 +29,19 @@ export const StyledColumn = styled.div`
 export const ShadowedBox = styled.div`
 	box-shadow: 2px 0 0 ${p => p.theme.colors.border};
 `;
-export const StyledLeftColumn = styled(StyledColumn)`
+export const StyledRightColumn = styled(StyledColumn)`
 	overflow-y: auto;
 	width: 646px;
 	height: 100%;
 	
 `; 
 
-export const StyledRightColumn = styled(StyledColumn)`
+export const StyledLeftColumn = styled(StyledColumn)`
 	overflow-y: auto;
 	width: 646px;
 	height: auto;
 	margin-top: 3px;
+	box-shadow: 2px 0 0 ${p => p.theme.colors.border}; 
 `; 
 
 export const StyledSimilarTitle = styled.div``

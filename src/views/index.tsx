@@ -3,9 +3,9 @@ import {
 	LayoutContainer,
 	GnbContainer,
 	Main,
-	StyledRightColumn
+	StyledLeftColumn
 } from './style';
-import { ListView } from 'components/list';
+import ListView from 'components/list';
 import { Gnb } from 'components/layout/gnb';  
 import Placeholder from 'components/placeholder';
 export const JoyView: FC = ({
@@ -17,8 +17,7 @@ export const JoyView: FC = ({
 				<Gnb/>
 			</GnbContainer>
 			<Main>
-					<ListView/>
-					<StyledRightColumn>
+					<StyledLeftColumn>
 						{
 							searchData.length > 0 
 								?
@@ -26,7 +25,8 @@ export const JoyView: FC = ({
 								:
 									<Placeholder /> 
 						}					
-					</StyledRightColumn>
+					</StyledLeftColumn>
+					<ListView/>
 				</Main>
 		</LayoutContainer>
 	)
