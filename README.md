@@ -3,6 +3,8 @@
  
 #### built by jaewon Yoon 
 #### react.js, typescript, redux, redux-thunk, webpack, styled-components.
+#### PREVIEW 
+![Preview](demo/joy-assignment.gif)
 
 #### how to start? 
 1. yarn
