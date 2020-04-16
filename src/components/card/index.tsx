@@ -14,10 +14,12 @@ import {
 import { NationalData } from 'models';
 import { BlueButton } from 'components/button';
  export const Card: FC<{
+	 	buttonExist?: boolean 
 	 	search?: boolean,
 	 	index: number,
 	  nationalData : NationalData
  }> = ({
+	 buttonExist = true,
 	 search = false, 
 	 index,
 	 nationalData
@@ -38,13 +40,15 @@ import { BlueButton } from 'components/button';
 							{ name }
 						</StyledTitle>
 					</StyledTitleNestedBox>
-					<StyledButtonBox>
-						{search ? 
-							<BlueButton isActive={false} > 추가 </BlueButton>
-										:
-							<BlueButton isActive={false} > 삭제 </BlueButton>
-						}	
-					</StyledButtonBox>
+					{buttonExist && 
+						<StyledButtonBox>
+							{search ? 
+								<BlueButton isActive={false} > 추가 </BlueButton>
+											:
+								<BlueButton isActive={false} > 삭제 </BlueButton>
+							}	
+						</StyledButtonBox>
+ 					}
 			</StyledTitleBox>
 			<StyledContentBox>
 				<StyledContentColumnFirst>

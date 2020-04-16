@@ -37007,7 +37007,7 @@ exports.fetchDataAync = () => {
                 dispatch(exports.fetchFulfilled(payload));
                 try {
                     dispatch(dataSearch_1.injectSearch());
-                    dispatch(dataSearch_1.searchFulfilled(payload));
+                    dispatch(dataSearch_1.searchFulfilled({ data: payload }));
                 }
                 catch (error) {
                     dispatch(dataSearch_1.searchRejected(error));
@@ -37043,45 +37043,58 @@ exports.fetchRejected = (payload) => ({
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-// Actions
+exports.initialPayload = {
+    data: [],
+    searchInput: "",
+    error: "",
+    isDataExist: false
+};
 exports.SEARCH_INJECT = "SEARCH_INJECT";
 exports.SEARCH_DATA = "SEARCH_DATA";
 exports.SEARCH_DATA_FULFILLED = "SEARCH_DATA_FULFILLED";
 exports.SEARCH_DATA_CANCELLED = "SEARCH_DATA_CANCELLED";
 exports.SEARCH_DATA_REJECTED = "SEARCH_DATA_REJECTED";
 exports.injectSearch = () => ({
-    type: exports.SEARCH_INJECT
+    type: exports.SEARCH_INJECT,
+    payload: exports.initialPayload
 });
 exports.searchDataAsync = (input, originalData) => {
-    const dispatch = react_redux_1.useDispatch();
-    const searchInput = input.trim();
-    if (searchInput.length > 0) {
-        const data = originalData.filter((value, index) => {
-            value.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0;
-        });
-        try {
-            dispatch(exports.searchData({ searchInput }));
-            dispatch(exports.searchFulfilled({ data }));
+    return (dispatch) => {
+        const searchInput = input.trim();
+        if (searchInput.length > 0) {
+            const data = originalData.filter((value) => {
+                return value.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0;
+            });
+            try {
+                dispatch(exports.searchData({ searchInput }));
+                dispatch(exports.searchFulfilled({
+                    data,
+                    isDataExist: !!data.length
+                }));
+            }
+            catch (error) {
+                dispatch(exports.searchRejected({ error }));
+                console.error(error);
+            }
         }
-        catch (error) {
-            dispatch(exports.searchRejected({ error }));
-            console.error(error);
+        else {
+            try {
+                dispatch(exports.searchData({ searchInput }));
+                dispatch(exports.searchFulfilled({
+                    data: originalData,
+                    isDataExist: false
+                }));
+            }
+            catch (error) {
+                dispatch(exports.searchRejected({ error }));
+                console.error(error);
+            }
         }
-    }
-    else {
-        try {
-            dispatch(exports.searchData({ searchInput }));
-            dispatch(exports.searchFulfilled({ data: originalData }));
-        }
-        catch (error) {
-            dispatch(exports.searchRejected({ error }));
-            console.error(error);
-        }
-    }
+    };
 };
 exports.cancelSearch = () => ({
-    type: exports.SEARCH_DATA_CANCELLED
+    type: exports.SEARCH_DATA_CANCELLED,
+    payload: exports.initialPayload
 });
 exports.searchData = (payload = {}) => ({
     type: exports.SEARCH_DATA,
@@ -37274,17 +37287,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const style_1 = __webpack_require__(/*! ./style */ "./src/components/card/style.tsx");
 const button_1 = __webpack_require__(/*! components/button */ "./src/components/button/index.tsx");
-exports.Card = ({ search = false, index, nationalData }) => {
+exports.Card = ({ buttonExist = true, search = false, index, nationalData }) => {
     const { name, alpha2Code, callingCodes, capital, region } = nationalData;
     return (react_1.default.createElement(style_1.StyledCard, null,
         react_1.default.createElement(style_1.StyledTitleBox, null,
             react_1.default.createElement(style_1.StyledTypeName, null, alpha2Code),
             react_1.default.createElement(style_1.StyledTitleNestedBox, null,
                 react_1.default.createElement(style_1.StyledTitle, null, name)),
-            react_1.default.createElement(style_1.StyledButtonBox, null, search ?
-                react_1.default.createElement(button_1.BlueButton, { isActive: false }, " \uCD94\uAC00 ")
-                :
-                    react_1.default.createElement(button_1.BlueButton, { isActive: false }, " \uC0AD\uC81C "))),
+            buttonExist &&
+                react_1.default.createElement(style_1.StyledButtonBox, null, search ?
+                    react_1.default.createElement(button_1.BlueButton, { isActive: false }, " \uCD94\uAC00 ")
+                    :
+                        react_1.default.createElement(button_1.BlueButton, { isActive: false }, " \uC0AD\uC81C "))),
         react_1.default.createElement(style_1.StyledContentBox, null,
             react_1.default.createElement(style_1.StyledContentColumnFirst, null,
                 react_1.default.createElement(style_1.StyledNumber, null, index + 1)),
@@ -37573,6 +37587,141 @@ exports.StyledLoadingContainer = styled_components_1.default.div `
 
 /***/ }),
 
+/***/ "./src/components/placeholder/index.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/placeholder/index.tsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const style_1 = __webpack_require__(/*! ./style */ "./src/components/placeholder/style.tsx");
+const Placeholder = () => {
+    return (react_1.default.createElement(style_1.StyledPlaceholder, null,
+        react_1.default.createElement(style_1.StyledTextBox, null,
+            react_1.default.createElement(style_1.StyledParagraph, null,
+                react_1.default.createElement(style_1.EditBlueButton, null, "\uAC80\uC0C9"),
+                "\uCC3D\uC744 \uC774\uC6A9\uD574"),
+            react_1.default.createElement(style_1.StyledParagraph, null, "\uCC3E\uACE0\uC790 \uD558\uB294 \uAD6D\uAC00\uB97C \uAC80\uC0C9\uD574\uBCF4\uC138\uC694."))));
+};
+exports.default = Placeholder;
+
+
+/***/ }),
+
+/***/ "./src/components/placeholder/style.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/placeholder/style.tsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const styled_components_1 = __importDefault(__webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js"));
+exports.StyledPlaceholder = styled_components_1.default.div `
+	width: 100%;
+	height: 100%;
+	background-color:	${p => p.theme.colors.white}; 
+	display: flex;
+	align-items:center;
+	justify-content: center;
+`;
+exports.StyledParagraph = styled_components_1.default.div `
+	margin: 
+	${p => p.theme.typo.des14skyGray};
+`;
+exports.StyledTextBox = styled_components_1.default.div `
+	line-height: 28px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+exports.EditBlueButton = styled_components_1.default.button `
+  ${p => p.theme.typo.button14skyBlue}}
+  border: 1px solid ${p => p.theme.colors.border};
+  border-radius: 3px;
+  width: 70px;
+  height: 24px;
+  background-color: transparent;
+	cursor: pointer;
+	padding: 0px;
+	margin: 0 8px;
+	font-size:12px;
+`;
+
+
+/***/ }),
+
+/***/ "./src/components/searchList/index.tsx":
+/*!*********************************************!*\
+  !*** ./src/components/searchList/index.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const libs_1 = __webpack_require__(/*! libs */ "./src/libs/index.ts");
+const card_1 = __webpack_require__(/*! components/card */ "./src/components/card/index.tsx");
+const style_1 = __webpack_require__(/*! ./style */ "./src/components/searchList/style.tsx");
+const placeholder_1 = __importDefault(__webpack_require__(/*! components/placeholder */ "./src/components/placeholder/index.tsx"));
+exports.SearchList = () => {
+    const { data } = libs_1.getSelector('search');
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(style_1.SearchListContainer, null, data && data.length > 0 ?
+            data.map((value, index) => {
+                return (react_1.default.createElement(card_1.Card, { buttonExist: false, nationalData: value, index: index }));
+            })
+            :
+                react_1.default.createElement(placeholder_1.default, null))));
+};
+
+
+/***/ }),
+
+/***/ "./src/components/searchList/style.tsx":
+/*!*********************************************!*\
+  !*** ./src/components/searchList/style.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const styled_components_1 = __importDefault(__webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js"));
+exports.StyledColumn = styled_components_1.default.div `
+`;
+exports.SearchListContainer = styled_components_1.default(exports.StyledColumn) `
+	overflow-y: auto;
+	width: 646px;
+	height: auto;
+	margin-top: 3px;
+`;
+
+
+/***/ }),
+
 /***/ "./src/components/smartInput/index.tsx":
 /*!*********************************************!*\
   !*** ./src/components/smartInput/index.tsx ***!
@@ -37591,14 +37740,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const dataSearch_1 = __webpack_require__(/*! reducers/dataSearch */ "./src/reducers/dataSearch.ts");
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const libs_1 = __webpack_require__(/*! libs */ "./src/libs/index.ts");
+const dataSearch_1 = __webpack_require__(/*! actions/dataSearch */ "./src/actions/dataSearch.ts");
 const style_1 = __webpack_require__(/*! ./style */ "./src/components/smartInput/style.tsx");
 exports.SmartInput = () => {
     const [input, setInput] = react_1.useState('');
+    const { data } = libs_1.getSelector('data');
+    const dispatch = react_redux_1.useDispatch();
+    react_1.useEffect(() => {
+        data && dispatch(dataSearch_1.searchDataAsync(input, data));
+    }, [input]);
     const onChange = (e) => {
         const modifiedInput = e.target.value;
         setInput(modifiedInput);
-        dataSearch_1.searchDataAsync(modifiedInput);
     };
     return (react_1.default.createElement(style_1.StyledInputContainer, null,
         react_1.default.createElement(style_1.StyledInput, { value: input, onChange: react_1.useCallback(onChange, []) })));
@@ -37628,7 +37783,7 @@ exports.StyledInputContainer = styled_components_1.default.div `
 	}
 `;
 exports.StyledInput = styled_components_1.default.input `
-   padding: 0 16px;
+   padding: 0 16px; 
 	 *:focus{
 		 outline: none; 
 	 }
@@ -37667,6 +37822,58 @@ exports.App = () => {
             react_1.default.createElement(views_1.JoyView, null))));
 };
 react_dom_1.default.render(react_1.default.createElement(exports.App, null), document.getElementById('app'));
+
+
+/***/ }),
+
+/***/ "./src/libs/hooks/index.ts":
+/*!*********************************!*\
+  !*** ./src/libs/hooks/index.ts ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(/*! ./useSelector */ "./src/libs/hooks/useSelector.ts"));
+
+
+/***/ }),
+
+/***/ "./src/libs/hooks/useSelector.ts":
+/*!***************************************!*\
+  !*** ./src/libs/hooks/useSelector.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+exports.getSelector = (key) => react_redux_1.useSelector((state) => state[key]);
+
+
+/***/ }),
+
+/***/ "./src/libs/index.ts":
+/*!***************************!*\
+  !*** ./src/libs/index.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(/*! ./hooks */ "./src/libs/hooks/index.ts"));
 
 
 /***/ }),
@@ -37765,7 +37972,7 @@ exports.dataSearchReducer = (state = {
         case dataSearch_1.SEARCH_DATA_CANCELLED:
             return Object.assign(Object.assign({}, state), { isSearchingData: false });
         case dataSearch_1.SEARCH_DATA_FULFILLED:
-            return Object.assign(Object.assign({}, state), { error: "", data: action.payload.data, isSearchingData: false });
+            return Object.assign(Object.assign({}, state), { error: "", data: action.payload.data, isSearchingData: false, isDataExist: action.payload.isDataExist });
         case dataSearch_1.SEARCH_DATA_REJECTED:
             return Object.assign(Object.assign({}, state), { isSearchingData: false, error: action.payload.error });
         default:
@@ -37789,9 +37996,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 const dataFetch_1 = __webpack_require__(/*! reducers/dataFetch */ "./src/reducers/dataFetch.ts");
 const dataEdit_1 = __webpack_require__(/*! reducers/dataEdit */ "./src/reducers/dataEdit.ts");
+const dataSearch_1 = __webpack_require__(/*! ./dataSearch */ "./src/reducers/dataSearch.ts");
 exports.rootReducer = redux_1.combineReducers({
     data: dataFetch_1.dataFetchReducer,
-    edit: dataEdit_1.dataEditReducer
+    edit: dataEdit_1.dataEditReducer,
+    search: dataSearch_1.dataSearchReducer
 });
 
 
@@ -38001,13 +38210,17 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const style_1 = __webpack_require__(/*! ./style */ "./src/views/style.tsx");
 const list_1 = __importDefault(__webpack_require__(/*! components/list */ "./src/components/list/index.tsx"));
 const gnb_1 = __webpack_require__(/*! components/layout/gnb */ "./src/components/layout/gnb.tsx");
+const searchList_1 = __webpack_require__(/*! components/searchList */ "./src/components/searchList/index.tsx");
 exports.JoyView = ({}) => {
     const searchData = [];
     return (react_1.default.createElement(style_1.LayoutContainer, null,
         react_1.default.createElement(style_1.GnbContainer, null,
             react_1.default.createElement(gnb_1.Gnb, null)),
         react_1.default.createElement(style_1.Main, null,
-            react_1.default.createElement(list_1.default, null))));
+            react_1.default.createElement(style_1.StyledLeftColumn, null,
+                react_1.default.createElement(list_1.default, null)),
+            react_1.default.createElement(style_1.StyledRightColumn, null,
+                react_1.default.createElement(searchList_1.SearchList, null)))));
 };
 
 

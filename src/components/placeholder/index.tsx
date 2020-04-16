@@ -18,7 +18,7 @@ const Placeholder: FC = () => {
 					창을 이용해  
 				</StyledParagraph>
 				<StyledParagraph>
-					검색한 국가를 추가해보세요. 
+					찾고자 하는 국가를 검색해보세요.
 				</StyledParagraph>
 			</StyledTextBox>
 		</StyledPlaceholder>

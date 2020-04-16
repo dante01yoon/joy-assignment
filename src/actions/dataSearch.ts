@@ -1,23 +1,26 @@
 import {
-	ViewModel,
-	NationalData
+	ViewModel
 } from 'models';
-import { useDispatch } from 'react-redux'; 
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { dataEditReducer } from 'reducers/dataEdit';
 
 export interface SearchActionPayload {
-	data?: ViewModel | string | undefined;
+	data?: ViewModel;
 	searchInput?: string;
 	error?: string;
+	isDataExist?: boolean;
+}
+export const initialPayload: SearchActionPayload = {
+	data: [],
+	searchInput: "",
+	error: "",
+	isDataExist: false
 }
 export interface SearchActionInterface {
 	type: "SEARCH_INJECT" | "SEARCH_DATA" | "SEARCH_DATA_FULFILLED" | "SEARCH_DATA_CANCELLED" | "SEARCH_DATA_REJECTED",
-	payload?: SearchActionPayload
+	payload: SearchActionPayload
 }
 
-// Actions
 export const SEARCH_INJECT = "SEARCH_INJECT";
 export const SEARCH_DATA = "SEARCH_DATA";
 export const SEARCH_DATA_FULFILLED = "SEARCH_DATA_FULFILLED"; 
@@ -25,35 +28,44 @@ export const SEARCH_DATA_CANCELLED = "SEARCH_DATA_CANCELLED";
 export const SEARCH_DATA_REJECTED = "SEARCH_DATA_REJECTED"; 
 
 export const injectSearch: () => SearchActionInterface = ( ) => ({
-	type: SEARCH_INJECT
+	type: SEARCH_INJECT,
+	payload: initialPayload 
 });
 export const searchDataAsync = (input: string, originalData: ViewModel) => {
-	const dispatch = useDispatch(); 
-	const searchInput = input.trim();
-	if(searchInput.length > 0 ) {
-		const data = originalData.filter((value,index) => {
-			value.name.toLowerCase().indexOf(searchInput.toLowerCase()) >=0  
-		});
-		try{
-			dispatch(searchData({searchInput}));
-			dispatch(searchFulfilled({data}));
-		}	catch(error) {
-			dispatch(searchRejected({error}));
-			console.error(error);
+	return (dispatch: ThunkDispatch<{},{},AnyAction>) => {
+		const searchInput = input.trim();
+		if(searchInput.length > 0 ) {
+			const data = originalData.filter((value) => {
+				return value.name.toLowerCase().indexOf(searchInput.toLowerCase()) >=0  
+			});
+			try{
+				dispatch(searchData({searchInput}));
+				dispatch(searchFulfilled({
+					data,
+					isDataExist: !!data.length 
+				}));
+			}	catch(error) {
+				dispatch(searchRejected({error}));
+				console.error(error);
+			}
 		}
-	}
-	else {
-		try{
-			dispatch(searchData({searchInput}));
-			dispatch(searchFulfilled({data:originalData}));  		
-		}catch (error) {
-			dispatch(searchRejected({error})); 
-			console.error(error); 
+		else {
+			try{
+				dispatch(searchData({searchInput}));
+				dispatch(searchFulfilled({
+					data:originalData,
+					isDataExist: false 
+				}));  		
+			}catch (error) {
+				dispatch(searchRejected({error})); 
+				console.error(error); 
+			}
 		}
 	}
 }
 export const cancelSearch: () => SearchActionInterface = ()  => ({
-	type: SEARCH_DATA_CANCELLED
+	type: SEARCH_DATA_CANCELLED,
+	payload: initialPayload
  });  
 
 export const searchData: (payload: SearchActionPayload ) =>  

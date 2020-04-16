@@ -40,7 +40,7 @@ export const fetchDataAync = ()=> {
 				dispatch(fetchFulfilled(payload));
 				try{
 					dispatch(injectSearch()); 
-					dispatch(searchFulfilled(payload)); 
+					dispatch(searchFulfilled({data: payload})); 
 				} catch(error) {
 					dispatch(searchRejected(error));
 					console.error(error); 

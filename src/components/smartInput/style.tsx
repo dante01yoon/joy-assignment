@@ -7,7 +7,7 @@ export const StyledInputContainer = styled.div`
 	}
 `;
 export const StyledInput= styled.input`
-   padding: 0 16px;
+   padding: 0 16px; 
 	 *:focus{
 		 outline: none; 
 	 }

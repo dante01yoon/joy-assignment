@@ -9,7 +9,7 @@ import {
 import {
 	ViewModel
 } from 'models';
-export type SearchModelState = {
+export type SearchState = {
 	serachInput?: string, 
 	data?: ViewModel,
 	error?: string, 
@@ -17,7 +17,7 @@ export type SearchModelState = {
 	isDataExist?: boolean
 }
 export const dataSearchReducer = (
-	state: SearchModelState = {
+	state: SearchState = {
 		serachInput: "", 
 		data: [],
 		error: "",
@@ -34,7 +34,13 @@ export const dataSearchReducer = (
 		case SEARCH_DATA_CANCELLED: 
 			return {...state, isSearchingData: false};
 		case SEARCH_DATA_FULFILLED:
-			return {...state, error: "", data: action.payload.data, isSearchingData: false};
+			return {
+				...state, 
+				error: "", 
+				data: action.payload.data, 
+				isSearchingData: false,
+				isDataExist: action.payload.isDataExist
+			};
 		case SEARCH_DATA_REJECTED:
 			return {...state, isSearchingData: false, error: action.payload.error};
 		default:
