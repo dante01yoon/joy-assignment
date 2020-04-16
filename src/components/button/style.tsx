@@ -2,12 +2,18 @@
 import styled from 'styled-components'; 
 
 type ButtonProps = {
-  isActive?: boolean;
+	isActive?: boolean;
+	disabled?: boolean; 
 };
 
 export const StyledBlueButton = styled.button<ButtonProps>`
-  ${p => p.theme.typo.button14skyBlue}}
-  border: 1px solid ${p=>p.theme.colors.border};
+	${p => p.disabled 
+			?
+		p.theme.typo.des14skyGray
+			:
+		p.theme.typo.button14skyBlue 
+	};
+	border: 1px solid ${p=>p.theme.colors.border};
   border-radius: 3px;
   width: 80px;
   height: 36px;

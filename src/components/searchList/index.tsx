@@ -5,6 +5,7 @@ import {
 	SearchListContainer
 } from './style';
 import Placeholder from 'components/placeholder';
+
 export const SearchList: FC = () => {
 	const { data } = getSelector('search');
 	

@@ -1,4 +1,7 @@
 import React, { FC } from 'react'; 
+import { getSelector } from 'libs';
+import { useDispatch } from 'react-redux';
+import { removeDataAsync } from 'actions/dataEdit';
 import { 
 	StyledCard,
 	StyledTitleBox,
@@ -13,6 +16,7 @@ import {
  } from './style';
 import { NationalData } from 'models';
 import { BlueButton } from 'components/button';
+import { removeData } from 'actions';
  export const Card: FC<{
 	 	buttonExist?: boolean 
 	 	search?: boolean,
@@ -24,6 +28,7 @@ import { BlueButton } from 'components/button';
 	 index,
 	 nationalData
  }) => {
+	 const dispatch= useDispatch();
 	 const {
 		 name,
 		 alpha2Code,
@@ -31,6 +36,11 @@ import { BlueButton } from 'components/button';
 		 capital,
 		 region
 	 } = nationalData; 
+	 const { data } = getSelector('data');
+	 const removeNationalData = (state:NationalData) => {
+		data && dispatch(removeDataAsync(state, data));
+		console.log(state);
+	}
 	return (
 		<StyledCard>
 			<StyledTitleBox>
@@ -45,7 +55,7 @@ import { BlueButton } from 'components/button';
 							{search ? 
 								<BlueButton isActive={false} > 추가 </BlueButton>
 											:
-								<BlueButton isActive={false} > 삭제 </BlueButton>
+								<BlueButton isActive={false} onClick={removeNationalData(nationalData)}> 삭제 </BlueButton>
 							}	
 						</StyledButtonBox>
  					}
@@ -59,7 +69,7 @@ import { BlueButton } from 'components/button';
 				<StyledContentColumnSecond>
 					<StyledTitle>callingCodes: </StyledTitle>
 					{
-						callingCodes.map((value:number, index:number) => {
+						callingCodes.map((value:string, index:number) => {
 							return <StyledTitle key={index}> {value} </StyledTitle>
 						})
 					}

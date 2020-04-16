@@ -36944,22 +36944,50 @@ exports.EDIT_DATA_CANCELLED = "EDIT_DATA_CANCELLED";
 exports.EDIT_DATA_FULFILLED = "EDIT_DATA_FULFILLED";
 exports.EDIT_DATA_REJECTED = "EDIT_DATA_REJECTED";
 exports.cancelEdit = () => ({
-    type: exports.EDIT_DATA_CANCELLED
+    type: exports.EDIT_DATA_CANCELLED,
+    payload: {}
 });
-exports.addData = (payload) => ({
+exports.addData = () => ({
     type: exports.ADD_DATA,
-    payload
+    payload: {}
 });
-exports.removeData = (payload) => ({
+exports.addDataAsync = (input, originalData) => {
+    return (dispatch) => {
+        const data = [...originalData, input];
+        try {
+            dispatch(exports.addData());
+            dispatch(exports.editFulfilled(data));
+        }
+        catch (error) {
+            dispatch(exports.editRejected(error));
+        }
+    };
+};
+exports.removeData = () => ({
     type: exports.ADD_DATA,
-    payload
+    payload: {}
 });
-exports.editFulfilled = () => ({
+exports.removeDataAsync = (input, originalData) => {
+    return (dispatch) => {
+        const data = originalData.filter((value) => {
+            return value.alpha2Code !== input.alpha2Code;
+        });
+        try {
+            dispatch(exports.removeData());
+            dispatch(exports.editFulfilled(data));
+        }
+        catch (error) {
+            dispatch(exports.editRejected(error));
+        }
+    };
+};
+exports.editFulfilled = (data) => ({
     type: exports.EDIT_DATA_FULFILLED,
+    payload: { data }
 });
-exports.editRejected = (payload) => ({
+exports.editRejected = (error) => ({
     type: exports.EDIT_DATA_REJECTED,
-    payload
+    payload: { error }
 });
 
 
@@ -37210,6 +37238,201 @@ exports.http = { GET };
 
 /***/ }),
 
+/***/ "./src/components/addCard/index.tsx":
+/*!******************************************!*\
+  !*** ./src/components/addCard/index.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const libs_1 = __webpack_require__(/*! libs */ "./src/libs/index.ts");
+const style_1 = __webpack_require__(/*! ./style */ "./src/components/addCard/style.tsx");
+const dataEdit_1 = __webpack_require__(/*! actions/dataEdit */ "./src/actions/dataEdit.ts");
+const button_1 = __webpack_require__(/*! components/button */ "./src/components/button/index.tsx");
+exports.AddCard = ({ nationalData = [] }) => {
+    const [disabled, setDisabled] = react_1.useState(true);
+    const [state, setState] = react_1.useState({
+        name: "",
+        alpha2Code: "",
+        callingCodes: "",
+        capital: "",
+        region: ""
+    });
+    const [error, setError] = react_1.useState("");
+    const dispatch = react_redux_1.useDispatch();
+    const { data } = libs_1.getSelector('data');
+    const checkValid = (key, check) => {
+        var flag = false;
+        for (let i = 0; i < nationalData.length; i++) {
+            if (typeof (nationalData[i][key]) === "string" &&
+                nationalData[i][key].toLowerCase() === check.toLowerCase()) {
+                flag = true;
+                break;
+            }
+            else if (nationalData[i][key] === check) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    };
+    const onChange = (e) => {
+        const value = e.target.value;
+        const flag = checkValid(e.target.name, value);
+        setState(Object.assign(Object.assign({}, state), { [e.target.name]: value }));
+        if (flag) {
+            setDisabled(true);
+            setError(e.target.name);
+        }
+        else {
+            setDisabled(false);
+            setError("");
+        }
+    };
+    const addNewNationalData = (state) => {
+        data && dispatch(dataEdit_1.addDataAsync(state, data));
+        console.log(state);
+    };
+    return (react_1.default.createElement(style_1.StyledContainer, null,
+        react_1.default.createElement(style_1.StyledRow, null,
+            react_1.default.createElement(style_1.StyledColumn, null,
+                react_1.default.createElement(style_1.StyledTitle, null, "name"),
+                react_1.default.createElement(style_1.StyledInput, { name: "name", value: state.name, onChange: onChange })),
+            react_1.default.createElement(style_1.StyledColumn, null,
+                react_1.default.createElement(style_1.StyledTitle, null, "alpha2Code"),
+                react_1.default.createElement(style_1.StyledInput, { name: "alpha2Code", value: state.alpha2Code, onChange: onChange })),
+            react_1.default.createElement(style_1.StyledColumn, null,
+                react_1.default.createElement(style_1.StyledTitle, null, "callingCodes"),
+                react_1.default.createElement(style_1.StyledInput, { name: "callingCodes", value: state.callingCodes, onChange: onChange })),
+            react_1.default.createElement(style_1.StyledColumn, null,
+                react_1.default.createElement(style_1.StyledTitle, null, "capital"),
+                react_1.default.createElement(style_1.StyledInput, { name: "capital", value: state.capital, onChange: onChange })),
+            react_1.default.createElement(style_1.StyledColumn, null,
+                react_1.default.createElement(style_1.StyledTitle, null, "region"),
+                react_1.default.createElement(style_1.StyledSelect, { name: "region", value: state.region, onChange: onChange },
+                    react_1.default.createElement("option", { value: "Asia", selected: true }, "Asia"),
+                    react_1.default.createElement("option", { value: "Europe" }, "Europe"),
+                    react_1.default.createElement("option", { value: "Americas" }, "Americas"),
+                    react_1.default.createElement("option", { value: "Africa" }, "Africa"),
+                    react_1.default.createElement("option", { value: "Oseania" }, "Oseania")))),
+        react_1.default.createElement(button_1.BlueButton, { disabled: disabled, onClick: addNewNationalData({
+                name: state.name,
+                alpha2Code: state.alpha2Code,
+                callingCodes: [state.callingCodes],
+                capital: state.capital,
+                region: state.region
+            }) }, "\uCD94\uAC00"),
+        react_1.default.createElement(style_1.StyledError, { disabled: !!error },
+            error,
+            " value is already exist")));
+};
+
+
+/***/ }),
+
+/***/ "./src/components/addCard/style.tsx":
+/*!******************************************!*\
+  !*** ./src/components/addCard/style.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const styled_components_1 = __importStar(__webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js"));
+exports.StyledContainer = styled_components_1.default.div `
+	height: 400px;
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+`;
+exports.StyledRow = styled_components_1.default.div `
+	display:flex;
+	flex-direction: column;
+	margin: 16px; 
+`;
+exports.StyledColumn = styled_components_1.default.div `
+	display: flex;
+	
+`;
+exports.StyledTitle = styled_components_1.default.div `
+	display: flex;
+	align-items: center;
+	${p => p.theme.typo.title14skyGray};
+	width: 100px;
+`;
+exports.StyledInput = styled_components_1.default.input `
+	padding: 0 16px; 
+	*:focus{
+		outline: none; 
+	}
+	border: 2px solid ${p => p.theme.colors.border};
+	outline: 0;  
+	border-radius: 8px; 
+	width: 240px;
+	height: 32px; 
+	${p => p.theme.typo.button14skyBlue};
+`;
+exports.StyledSelect = styled_components_1.default.select `
+	${p => p.theme.typo.title14skyGray};
+	padding: 0 16px; 
+	width: 276px;
+	height: 32px; 
+	border-radius: 8px; 
+	background: ${p => p.theme.colors.white}; 
+	border: 2px solid ${p => p.theme.colors.border}; 
+	
+	option {
+		color: black;
+		background: ${p => p.theme.colors.white}; 
+		display: flex;
+		white-space: pre; 
+		min-height: 32px;
+		padding: 0px 2px 1px; 
+	}
+`;
+exports.StyledError = styled_components_1.default.div `
+	${p => p.disabled
+    ?
+        styled_components_1.css `
+					display: flex;
+				`
+    :
+        styled_components_1.css `				
+					display: none; 
+				`}	
+	margin: 16px;
+	width: 248px;
+	align-items: center;
+	justify-content: center; 
+	${p => p.theme.typo.title14skyGray};
+	color: red;
+`;
+
+
+/***/ }),
+
 /***/ "./src/components/button/index.tsx":
 /*!*****************************************!*\
   !*** ./src/components/button/index.tsx ***!
@@ -37225,9 +37448,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const style_1 = __webpack_require__(/*! ./style */ "./src/components/button/style.tsx");
-exports.BlueButton = ({ isActive = false, children = '', onClick }) => {
+exports.BlueButton = ({ disabled = false, isActive = false, children = '', onClick }) => {
     const handleOnClick = onClick;
-    return (react_1.default.createElement(style_1.StyledBlueButton, { isActive: isActive, onClick: handleOnClick }, children));
+    return (react_1.default.createElement(style_1.StyledBlueButton, { isActive: isActive, onClick: handleOnClick, disabled: disabled }, children));
 };
 
 
@@ -37248,8 +37471,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const styled_components_1 = __importDefault(__webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js"));
 exports.StyledBlueButton = styled_components_1.default.button `
-  ${p => p.theme.typo.button14skyBlue}}
-  border: 1px solid ${p => p.theme.colors.border};
+	${p => p.disabled
+    ?
+        p.theme.typo.des14skyGray
+    :
+        p.theme.typo.button14skyBlue};
+	border: 1px solid ${p => p.theme.colors.border};
   border-radius: 3px;
   width: 80px;
   height: 36px;
@@ -37285,10 +37512,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const libs_1 = __webpack_require__(/*! libs */ "./src/libs/index.ts");
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const dataEdit_1 = __webpack_require__(/*! actions/dataEdit */ "./src/actions/dataEdit.ts");
 const style_1 = __webpack_require__(/*! ./style */ "./src/components/card/style.tsx");
 const button_1 = __webpack_require__(/*! components/button */ "./src/components/button/index.tsx");
 exports.Card = ({ buttonExist = true, search = false, index, nationalData }) => {
+    const dispatch = react_redux_1.useDispatch();
     const { name, alpha2Code, callingCodes, capital, region } = nationalData;
+    const { data } = libs_1.getSelector('data');
+    const removeNationalData = (state) => {
+        data && dispatch(dataEdit_1.removeDataAsync(state, data));
+        console.log(state);
+    };
     return (react_1.default.createElement(style_1.StyledCard, null,
         react_1.default.createElement(style_1.StyledTitleBox, null,
             react_1.default.createElement(style_1.StyledTypeName, null, alpha2Code),
@@ -37298,7 +37534,7 @@ exports.Card = ({ buttonExist = true, search = false, index, nationalData }) => 
                 react_1.default.createElement(style_1.StyledButtonBox, null, search ?
                     react_1.default.createElement(button_1.BlueButton, { isActive: false }, " \uCD94\uAC00 ")
                     :
-                        react_1.default.createElement(button_1.BlueButton, { isActive: false }, " \uC0AD\uC81C "))),
+                        react_1.default.createElement(button_1.BlueButton, { isActive: false, onClick: removeNationalData(nationalData) }, " \uC0AD\uC81C "))),
         react_1.default.createElement(style_1.StyledContentBox, null,
             react_1.default.createElement(style_1.StyledContentColumnFirst, null,
                 react_1.default.createElement(style_1.StyledNumber, null, index + 1)),
@@ -37411,15 +37647,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const style_1 = __webpack_require__(/*! ./style */ "./src/components/layout/style.tsx");
 const smartInput_1 = __webpack_require__(/*! components/smartInput */ "./src/components/smartInput/index.tsx");
-const button_1 = __webpack_require__(/*! components/button */ "./src/components/button/index.tsx");
 exports.Gnb = ({}) => {
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(style_1.StyledGnbLeft, null,
             react_1.default.createElement(style_1.TitleRight, null, "\uAC80\uC0C9\uACB0\uACFC \uAD6D\uAC00 \uB9AC\uC2A4\uD2B8")),
         react_1.default.createElement(style_1.StyledGnbRight, null,
             react_1.default.createElement(style_1.TitleLeft, null, "\uAD6D\uAC00 \uAC80\uC0C9/\uCD94\uAC00"),
-            react_1.default.createElement(smartInput_1.SmartInput, null),
-            react_1.default.createElement(button_1.BlueButton, null, " \uCD94\uAC00 "))));
+            react_1.default.createElement(smartInput_1.SmartInput, null))));
 };
 
 
@@ -37787,11 +38021,11 @@ exports.dataEditReducer = (state = {
         case actions_1.REMOVE_DATA:
             return Object.assign(Object.assign({}, state), { isEditingData: true });
         case actions_1.EDIT_DATA_FULFILLED:
-            return { error: "", data: action.payload, isFetchingData: false };
+            return { error: "", data: action.payload.data, isFetchingData: false };
         case actions_1.EDIT_DATA_CANCELLED:
             return Object.assign(Object.assign({}, state), { isEditingData: false });
         case actions_1.EDIT_DATA_REJECTED:
-            return Object.assign(Object.assign({}, state), { isEditingData: false, error: action.payload });
+            return Object.assign(Object.assign({}, state), { isEditingData: false, error: action.payload.error });
         default:
             return state;
     }
@@ -38103,18 +38337,22 @@ const dataFetch_1 = __webpack_require__(/*! actions/dataFetch */ "./src/actions/
 const style_1 = __webpack_require__(/*! ./style */ "./src/views/style.tsx");
 const gnb_1 = __webpack_require__(/*! components/layout/gnb */ "./src/components/layout/gnb.tsx");
 const searchList_1 = __webpack_require__(/*! components/searchList */ "./src/components/searchList/index.tsx");
+const addCard_1 = __webpack_require__(/*! components/addCard */ "./src/components/addCard/index.tsx");
+const libs_1 = __webpack_require__(/*! libs */ "./src/libs/index.ts");
 exports.JoyView = ({}) => {
     const dispatch = react_redux_1.useDispatch();
     react_1.useEffect(() => {
         dispatch(dataFetch_1.fetchDataAync());
     }, []);
+    const { data } = libs_1.getSelector('data');
     return (react_1.default.createElement(style_1.LayoutContainer, null,
         react_1.default.createElement(style_1.GnbContainer, null,
             react_1.default.createElement(gnb_1.Gnb, null)),
         react_1.default.createElement(style_1.Main, null,
             react_1.default.createElement(style_1.StyledLeftColumn, null,
                 react_1.default.createElement(searchList_1.SearchList, null)),
-            react_1.default.createElement(style_1.StyledRightColumn, null))));
+            react_1.default.createElement(style_1.StyledRightColumn, null,
+                react_1.default.createElement(addCard_1.AddCard, { nationalData: data })))));
 };
 
 

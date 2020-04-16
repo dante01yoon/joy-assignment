@@ -11,13 +11,15 @@ import {
 import ListView from 'components/list';
 import { Gnb } from 'components/layout/gnb';  
 import { SearchList } from 'components/searchList';
-import Placeholder from 'components/placeholder';
+import { AddCard } from 'components/addCard';
+import { getSelector } from 'libs';
 export const JoyView: FC = ({
 }) => {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(fetchDataAync());
 	},[]); 
+	const {data} = getSelector('data'); 
 	return(
 		<LayoutContainer>
 			<GnbContainer>
@@ -28,6 +30,7 @@ export const JoyView: FC = ({
 					<SearchList /> 
 				</StyledLeftColumn>
 				<StyledRightColumn>
+					<AddCard nationalData={data}/> 
 				</StyledRightColumn>
 			</Main>
 		</LayoutContainer>

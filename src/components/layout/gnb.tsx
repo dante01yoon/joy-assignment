@@ -6,7 +6,6 @@ import {
 	TitleLeft,
 } from './style'; 
 import { SmartInput } from 'components/smartInput'; 
-import { BlueButton } from 'components/button';
 export const Gnb: FC<{
 }> = ({}) => {
 	return(
@@ -21,7 +20,6 @@ export const Gnb: FC<{
 						국가 검색/추가
 				</TitleLeft>
 				<SmartInput/>
-				<BlueButton> 추가 </BlueButton>
 			</StyledGnbRight>
 		</>
 	)	

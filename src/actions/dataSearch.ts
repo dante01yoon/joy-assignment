@@ -1,7 +1,7 @@
 import {
 	ViewModel
 } from 'models';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 
 export interface SearchActionPayload {
