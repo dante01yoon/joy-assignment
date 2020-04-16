@@ -36985,6 +36985,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apis_1 = __webpack_require__(/*! apis */ "./src/apis/index.ts");
+const dataSearch_1 = __webpack_require__(/*! ./dataSearch */ "./src/actions/dataSearch.ts");
 // Actions
 exports.FETCH_DATA = "FETCH_DATA";
 exports.FETCH_DATA_FULFILLED = "FETCH_DATA_FULFILLED";
@@ -37002,7 +37003,17 @@ exports.fetchDataAync = () => {
         try {
             dispatch(exports.fetchData());
             const [, payload] = yield apis_1.fetchRequest();
-            payload && dispatch(exports.fetchFulfilled(payload));
+            if (payload) {
+                dispatch(exports.fetchFulfilled(payload));
+                try {
+                    dispatch(dataSearch_1.injectSearch());
+                    dispatch(dataSearch_1.searchFulfilled(payload));
+                }
+                catch (error) {
+                    dispatch(dataSearch_1.searchRejected(error));
+                    console.error(error);
+                }
+            }
         }
         catch (error) {
             dispatch(exports.fetchRejected(error));
@@ -37016,6 +37027,72 @@ exports.fetchFulfilled = (payload) => ({
 });
 exports.fetchRejected = (payload) => ({
     type: exports.FETCH_DATA_REJECTED,
+    payload
+});
+
+
+/***/ }),
+
+/***/ "./src/actions/dataSearch.ts":
+/*!***********************************!*\
+  !*** ./src/actions/dataSearch.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+// Actions
+exports.SEARCH_INJECT = "SEARCH_INJECT";
+exports.SEARCH_DATA = "SEARCH_DATA";
+exports.SEARCH_DATA_FULFILLED = "SEARCH_DATA_FULFILLED";
+exports.SEARCH_DATA_CANCELLED = "SEARCH_DATA_CANCELLED";
+exports.SEARCH_DATA_REJECTED = "SEARCH_DATA_REJECTED";
+exports.injectSearch = () => ({
+    type: exports.SEARCH_INJECT
+});
+exports.searchDataAsync = (input, originalData) => {
+    const dispatch = react_redux_1.useDispatch();
+    const searchInput = input.trim();
+    if (searchInput.length > 0) {
+        const data = originalData.filter((value, index) => {
+            value.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0;
+        });
+        try {
+            dispatch(exports.searchData({ searchInput }));
+            dispatch(exports.searchFulfilled({ data }));
+        }
+        catch (error) {
+            dispatch(exports.searchRejected({ error }));
+            console.error(error);
+        }
+    }
+    else {
+        try {
+            dispatch(exports.searchData({ searchInput }));
+            dispatch(exports.searchFulfilled({ data: originalData }));
+        }
+        catch (error) {
+            dispatch(exports.searchRejected({ error }));
+            console.error(error);
+        }
+    }
+};
+exports.cancelSearch = () => ({
+    type: exports.SEARCH_DATA_CANCELLED
+});
+exports.searchData = (payload = {}) => ({
+    type: exports.SEARCH_DATA,
+    payload
+});
+exports.searchFulfilled = (payload) => ({
+    type: exports.SEARCH_DATA_FULFILLED,
+    payload
+});
+exports.searchRejected = (payload) => ({
+    type: exports.SEARCH_DATA_REJECTED,
     payload
 });
 
@@ -37037,6 +37114,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(/*! ./dataFetch */ "./src/actions/dataFetch.ts"));
 __export(__webpack_require__(/*! ./dataEdit */ "./src/actions/dataEdit.ts"));
+__export(__webpack_require__(/*! ./dataSearch */ "./src/actions/dataSearch.ts"));
 
 
 /***/ }),

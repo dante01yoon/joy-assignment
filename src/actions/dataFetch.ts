@@ -5,6 +5,12 @@ import {
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { fetchRequest } from 'apis';
+import { 
+	injectSearch,
+	searchData, 
+	searchFulfilled,
+	searchRejected 
+} from './dataSearch'; 
 export interface ActionInterface {
 	type: "FETCH_DATA" | "FETCH_DATA_FULFILLED" | "FETCH_DATA_CANCELLED" | "FETCH_DATA_REJECTED",
 	payload?: ViewModel | string | undefined
@@ -30,7 +36,16 @@ export const fetchDataAync = ()=> {
 		try{
 			dispatch(fetchData()); 		
 			const [ , payload ] = await fetchRequest();
-			payload && dispatch(fetchFulfilled(payload)); 
+			if(payload) {
+				dispatch(fetchFulfilled(payload));
+				try{
+					dispatch(injectSearch()); 
+					dispatch(searchFulfilled(payload)); 
+				} catch(error) {
+					dispatch(searchRejected(error));
+					console.error(error); 
+				}
+			}
 		}catch (error) {
 			dispatch(fetchRejected(error)); 
 			console.error(error); 
