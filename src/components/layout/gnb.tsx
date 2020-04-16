@@ -5,7 +5,7 @@ import {
 	TitleRight,
 	TitleLeft,
 } from './style'; 
-
+import { SmartInput } from 'components/smartInput'; 
 export const Gnb: FC<{
 }> = ({}) => {
 	return(
@@ -19,6 +19,7 @@ export const Gnb: FC<{
 				<TitleLeft>
 						국가 검색/추가
 				</TitleLeft>
+				<SmartInput/>
 			</StyledGnbRight>
 		</>
 	)	

@@ -23,7 +23,7 @@ const ListView:FC = () => {
 				listData && listData?.length > 0 
 					?
 					listData.map((value,index) => {
-						return <Card key={index} index={index} search={true} nationalData={value}/>
+						return <Card key={index} index={index} search={false} nationalData={value}/>
 					})
 					:
 					<LoadingView />

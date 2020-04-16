@@ -37396,12 +37396,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const style_1 = __webpack_require__(/*! ./style */ "./src/components/layout/style.tsx");
+const smartInput_1 = __webpack_require__(/*! components/smartInput */ "./src/components/smartInput/index.tsx");
 exports.Gnb = ({}) => {
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(style_1.StyledGnbLeft, null,
             react_1.default.createElement(style_1.TitleRight, null, "\uAD6D\uAC00 \uB9AC\uC2A4\uD2B8")),
         react_1.default.createElement(style_1.StyledGnbRight, null,
-            react_1.default.createElement(style_1.TitleLeft, null, "\uAD6D\uAC00 \uAC80\uC0C9/\uCD94\uAC00"))));
+            react_1.default.createElement(style_1.TitleLeft, null, "\uAD6D\uAC00 \uAC80\uC0C9/\uCD94\uAC00"),
+            react_1.default.createElement(smartInput_1.SmartInput, null))));
 };
 
 
@@ -37491,7 +37493,7 @@ const ListView = () => {
         react_1.default.createElement(style_1.ListContainer, null, listData && (listData === null || listData === void 0 ? void 0 : listData.length) > 0
             ?
                 listData.map((value, index) => {
-                    return react_1.default.createElement(card_1.Card, { key: index, index: index, search: true, nationalData: value });
+                    return react_1.default.createElement(card_1.Card, { key: index, index: index, search: false, nationalData: value });
                 })
             :
                 react_1.default.createElement(loading_1.LoadingView, null))));
@@ -37571,38 +37573,44 @@ exports.StyledLoadingContainer = styled_components_1.default.div `
 
 /***/ }),
 
-/***/ "./src/components/placeholder/index.tsx":
-/*!**********************************************!*\
-  !*** ./src/components/placeholder/index.tsx ***!
-  \**********************************************/
+/***/ "./src/components/smartInput/index.tsx":
+/*!*********************************************!*\
+  !*** ./src/components/smartInput/index.tsx ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const style_1 = __webpack_require__(/*! ./style */ "./src/components/placeholder/style.tsx");
-const Placeholder = () => {
-    return (react_1.default.createElement(style_1.StyledPlaceholder, null,
-        react_1.default.createElement(style_1.StyledTextBox, null,
-            react_1.default.createElement(style_1.StyledParagraph, null,
-                react_1.default.createElement(style_1.EditBlueButton, null, "\uAC80\uC0C9"),
-                "\uCC3D\uC744 \uC774\uC6A9\uD574"),
-            react_1.default.createElement(style_1.StyledParagraph, null, "\uAC80\uC0C9\uD55C \uAD6D\uAC00\uB97C \uCD94\uAC00\uD574\uBCF4\uC138\uC694."))));
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const dataSearch_1 = __webpack_require__(/*! reducers/dataSearch */ "./src/reducers/dataSearch.ts");
+const style_1 = __webpack_require__(/*! ./style */ "./src/components/smartInput/style.tsx");
+exports.SmartInput = () => {
+    const [input, setInput] = react_1.useState('');
+    const onChange = (e) => {
+        const modifiedInput = e.target.value;
+        setInput(modifiedInput);
+        dataSearch_1.searchDataAsync(modifiedInput);
+    };
+    return (react_1.default.createElement(style_1.StyledInputContainer, null,
+        react_1.default.createElement(style_1.StyledInput, { value: input, onChange: react_1.useCallback(onChange, []) })));
 };
-exports.default = Placeholder;
 
 
 /***/ }),
 
-/***/ "./src/components/placeholder/style.tsx":
-/*!**********************************************!*\
-  !*** ./src/components/placeholder/style.tsx ***!
-  \**********************************************/
+/***/ "./src/components/smartInput/style.tsx":
+/*!*********************************************!*\
+  !*** ./src/components/smartInput/style.tsx ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37613,36 +37621,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const styled_components_1 = __importDefault(__webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js"));
-exports.StyledPlaceholder = styled_components_1.default.div `
-	width: 100%;
-	height: 100%;
-	background-color:	${p => p.theme.colors.white}; 
-	display: flex;
-	align-items:center;
-	justify-content: center;
+exports.StyledInputContainer = styled_components_1.default.div `
+	padding: 0 16px; 
+	& textarea:focus, input:focus {
+		outline: none;
+	}
 `;
-exports.StyledParagraph = styled_components_1.default.div `
-	margin: 
-	${p => p.theme.typo.des14skyGray};
-`;
-exports.StyledTextBox = styled_components_1.default.div `
-	line-height: 28px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-`;
-exports.EditBlueButton = styled_components_1.default.button `
-  ${p => p.theme.typo.button14skyBlue}}
-  border: 1px solid ${p => p.theme.colors.border};
-  border-radius: 3px;
-  width: 70px;
-  height: 24px;
-  background-color: transparent;
-	cursor: pointer;
-	padding: 0px;
-	margin: 0 8px;
-	font-size:12px;
+exports.StyledInput = styled_components_1.default.input `
+   padding: 0 16px;
+	 *:focus{
+		 outline: none; 
+	 }
+	 border: 2px solid ${p => p.theme.colors.border};
+	 outline: 0;  
+	 border-radius: 8px; 
+	 width: 240px;
+	 height: 32px; 
+	 ${p => p.theme.typo.button14skyBlue};
 `;
 
 
@@ -37736,6 +37731,43 @@ exports.dataFetchReducer = (state = {
             return { error: "", data: action.payload, isFetchingData: false };
         case actions_1.FETCH_DATA_REJECTED:
             return Object.assign(Object.assign({}, state), { isFetchingData: false, error: action.payload });
+        default:
+            return state;
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/reducers/dataSearch.ts":
+/*!************************************!*\
+  !*** ./src/reducers/dataSearch.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const dataSearch_1 = __webpack_require__(/*! actions/dataSearch */ "./src/actions/dataSearch.ts");
+exports.dataSearchReducer = (state = {
+    serachInput: "",
+    data: [],
+    error: "",
+    isSearchingData: false,
+    isDataExist: false
+}, action) => {
+    switch (action.type) {
+        case dataSearch_1.SEARCH_INJECT:
+            return Object.assign(Object.assign({}, state), { isSearchingData: true });
+        case dataSearch_1.SEARCH_DATA:
+            return Object.assign(Object.assign({}, state), { searchInput: action.payload.searchInput, isSearchingData: true });
+        case dataSearch_1.SEARCH_DATA_CANCELLED:
+            return Object.assign(Object.assign({}, state), { isSearchingData: false });
+        case dataSearch_1.SEARCH_DATA_FULFILLED:
+            return Object.assign(Object.assign({}, state), { error: "", data: action.payload.data, isSearchingData: false });
+        case dataSearch_1.SEARCH_DATA_REJECTED:
+            return Object.assign(Object.assign({}, state), { isSearchingData: false, error: action.payload.error });
         default:
             return state;
     }
@@ -37969,18 +38001,12 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const style_1 = __webpack_require__(/*! ./style */ "./src/views/style.tsx");
 const list_1 = __importDefault(__webpack_require__(/*! components/list */ "./src/components/list/index.tsx"));
 const gnb_1 = __webpack_require__(/*! components/layout/gnb */ "./src/components/layout/gnb.tsx");
-const placeholder_1 = __importDefault(__webpack_require__(/*! components/placeholder */ "./src/components/placeholder/index.tsx"));
 exports.JoyView = ({}) => {
     const searchData = [];
     return (react_1.default.createElement(style_1.LayoutContainer, null,
         react_1.default.createElement(style_1.GnbContainer, null,
             react_1.default.createElement(gnb_1.Gnb, null)),
         react_1.default.createElement(style_1.Main, null,
-            react_1.default.createElement(style_1.StyledLeftColumn, null, searchData.length > 0
-                ?
-                    react_1.default.createElement("div", null, "data\uAC00 \uC788\uC2B5\uB2C8\uB2E4.")
-                :
-                    react_1.default.createElement(placeholder_1.default, null)),
             react_1.default.createElement(list_1.default, null))));
 };
 

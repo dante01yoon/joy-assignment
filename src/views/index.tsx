@@ -17,17 +17,8 @@ export const JoyView: FC = ({
 				<Gnb/>
 			</GnbContainer>
 			<Main>
-					<StyledLeftColumn>
-						{
-							searchData.length > 0 
-								?
-									<div>data가 있습니다.</div>
-								:
-									<Placeholder /> 
-						}					
-					</StyledLeftColumn>
-					<ListView/>
-				</Main>
+				<ListView/>
+			</Main>
 		</LayoutContainer>
 	)
 }
