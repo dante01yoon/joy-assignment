@@ -16,7 +16,7 @@ export const SearchList: FC = () => {
 						data.map((value,index) => {
 							return (
 							<Card 
-								buttonExist={false}
+								search={false}
 								nationalData={value} 
 								index={index}/>
 							)

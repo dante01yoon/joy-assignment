@@ -1,4 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchDataAync } from 'actions/dataFetch';
 import { 
 	LayoutContainer,
 	GnbContainer,
@@ -12,7 +14,10 @@ import { SearchList } from 'components/searchList';
 import Placeholder from 'components/placeholder';
 export const JoyView: FC = ({
 }) => {
-	const searchData = [] ; 
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(fetchDataAync());
+	},[]); 
 	return(
 		<LayoutContainer>
 			<GnbContainer>
@@ -20,12 +25,12 @@ export const JoyView: FC = ({
 			</GnbContainer>
 			<Main>
 				<StyledLeftColumn>
-				<ListView/>
+					<SearchList /> 
 				</StyledLeftColumn>
 				<StyledRightColumn>
-					<SearchList /> 
 				</StyledRightColumn>
 			</Main>
 		</LayoutContainer>
 	)
 }
+
